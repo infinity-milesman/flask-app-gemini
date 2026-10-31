@@ -1,0 +1,7 @@
+{
+  "name": "Kinetic Clarity",
+  "description": "Precision-engineered athletic progression, structured training protocols, biometric tracking, and athletic habit mastery.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

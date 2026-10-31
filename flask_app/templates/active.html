@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Live Session — Kinetic Clarity{% endblock %}
+
+{% block content %}
+<div class="space-y-6 pb-12">
+  <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+    <div>
+      <span class="text-xs font-bold text-[#006398] uppercase tracking-wider block">Live Execution Protocol</span>
+      <h1 class="text-3xl font-bold text-slate-900">{{ session.title }}</h1>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="bg-white border border-slate-200 px-4 py-2 rounded-xl flex items-center gap-3 font-mono text-xl font-bold">
+        <span id="timer">24:18</span>
+      </div>
+      <a href="/" class="px-4 py-2 bg-black text-white rounded-xl text-xs font-bold hover:bg-slate-800">
+        Finish Session
+      </a>
+    </div>
+  </div>
+
+  <!-- Telemetry Bar -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="p-4 rounded-2xl bg-white border border-slate-200">
+      <span class="text-xs text-slate-500 font-semibold block">REST TIMER</span>
+      <span class="text-3xl font-bold font-mono text-[#006398]">01:30</span>
+      <span class="text-xs text-slate-400 block mt-1">Inter-set recovery</span>
+    </div>
+    <div class="p-4 rounded-2xl bg-white border border-slate-200">
+      <span class="text-xs text-slate-500 font-semibold block">HEART RATE</span>
+      <span class="text-3xl font-bold font-mono text-slate-900">148 <span class="text-xs font-normal text-slate-500">BPM</span></span>
+      <span class="text-xs text-emerald-600 font-semibold block mt-1">Zone 2 Aerobic Base</span>
+    </div>
+    <div class="p-4 rounded-2xl bg-white border border-slate-200">
+      <span class="text-xs text-slate-500 font-semibold block">VOLUME TONNAGE</span>
+      <span class="text-3xl font-bold font-mono text-slate-900">6,850 <span class="text-xs font-normal text-slate-500">KG</span></span>
+      <span class="text-xs text-slate-400 block mt-1">Target: 8,400 kg</span>
+    </div>
+  </div>
+
+  <!-- Workout Sets Table -->
+  <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+    <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+      <div>
+        <span class="text-xs font-bold text-[#006398] uppercase">Barbell · Squat</span>
+        <h2 class="text-xl font-bold text-slate-900">Barbell High-Bar Back Squat</h2>
+        <p class="text-xs text-slate-500 mt-0.5">Tempo: 3-1-X-0 · Drive mid-foot through floor, maintain upper back tightness.</p>
+      </div>
+      <span class="text-xs font-mono font-bold text-[#009668] bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200">
+        PR: 185 kg
+      </span>
+    </div>
+
+    <table class="w-full text-left text-xs">
+      <thead class="bg-slate-50 border-b border-slate-100 font-semibold text-slate-500 uppercase">
+        <tr>
+          <th class="p-3 w-12 text-center">Set</th>
+          <th class="p-3">Previous</th>
+          <th class="p-3">Target (kg)</th>
+          <th class="p-3">Reps</th>
+          <th class="p-3">RPE</th>
+          <th class="p-3 text-center w-24">Status</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 font-mono">
+        <tr class="bg-blue-50/30">
+          <td class="p-3 text-center font-bold">1</td>
+          <td class="p-3 text-slate-400">140kg x 6</td>
+          <td class="p-3 font-bold text-slate-900">145 kg</td>
+          <td class="p-3 font-bold text-slate-900">6</td>
+          <td class="p-3 text-slate-600">7.5</td>
+          <td class="p-3 text-center"><span class="px-2 py-1 bg-[#009668] text-white rounded font-sans font-bold text-[10px]">DONE</span></td>
+        </tr>
+        <tr class="bg-blue-50/30">
+          <td class="p-3 text-center font-bold">2</td>
+          <td class="p-3 text-slate-400">150kg x 6</td>
+          <td class="p-3 font-bold text-slate-900">152.5 kg</td>
+          <td class="p-3 font-bold text-slate-900">6</td>
+          <td class="p-3 text-slate-600">8.0</td>
+          <td class="p-3 text-center"><span class="px-2 py-1 bg-[#009668] text-white rounded font-sans font-bold text-[10px]">DONE</span></td>
+        </tr>
+        <tr>
+          <td class="p-3 text-center font-bold">3</td>
+          <td class="p-3 text-slate-400">155kg x 5</td>
+          <td class="p-3 font-bold text-slate-900">157.5 kg</td>
+          <td class="p-3 font-bold text-slate-900">5</td>
+          <td class="p-3 text-slate-600">8.5</td>
+          <td class="p-3 text-center"><button class="px-3 py-1 bg-black text-white rounded font-sans font-bold text-[10px] hover:bg-slate-800">COMPLETE</button></td>
+        </tr>
+        <tr>
+          <td class="p-3 text-center font-bold">4</td>
+          <td class="p-3 text-slate-400">160kg x 4</td>
+          <td class="p-3 font-bold text-slate-900">162.5 kg</td>
+          <td class="p-3 font-bold text-slate-900">4</td>
+          <td class="p-3 text-slate-600">9.0</td>
+          <td class="p-3 text-center"><span class="text-slate-400 text-xs font-sans">Pending</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

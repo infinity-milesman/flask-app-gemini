@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Kinetic Clarity — Athletic Training Studio{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Hanken Grotesk', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-[#f8f9ff] text-[#0b1c30] min-h-screen flex flex-col antialiased">
+
+  <!-- Clean Top Bar Contract -->
+  <header class="sticky top-0 z-30 bg-[#f8f9ff]/90 backdrop-blur-md border-b border-[#c6c6cd]/40">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
+      
+      <!-- Brand Wordmark -->
+      <a href="/" class="flex items-center gap-2 text-lg font-bold tracking-tight text-[#0b1c30]">
+        <div class="w-8 h-8 rounded-lg bg-black text-white flex items-center justify-center font-bold text-xs">
+          KC
+        </div>
+        <span>KINETIC CLARITY</span>
+      </a>
+
+      <!-- 4-5 Navigation Links -->
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
+        <a href="/" class="hover:text-black transition-colors {% if page == 'regimen' %}font-bold text-black border-b-2 border-[#006398] pb-1{% else %}text-[#45464d]{% endif %}">Regimen</a>
+        <a href="/active" class="hover:text-black transition-colors {% if page == 'active' %}font-bold text-black border-b-2 border-[#006398] pb-1{% else %}text-[#45464d]{% endif %}">Active Session</a>
+        <a href="/protocols" class="hover:text-black transition-colors {% if page == 'protocols' %}font-bold text-black border-b-2 border-[#006398] pb-1{% else %}text-[#45464d]{% endif %}">Protocols</a>
+        <a href="/biometrics" class="hover:text-black transition-colors {% if page == 'biometrics' %}font-bold text-black border-b-2 border-[#006398] pb-1{% else %}text-[#45464d]{% endif %}">Biometrics</a>
+        <a href="/codex" class="hover:text-black transition-colors {% if page == 'codex' %}font-bold text-black border-b-2 border-[#006398] pb-1{% else %}text-[#45464d]{% endif %}">Codex</a>
+      </nav>
+
+      <!-- Primary Action -->
+      <div class="flex items-center gap-3">
+        <a href="#quick-log" onclick="document.getElementById('log-modal').classList.remove('hidden')" class="px-4 py-2 rounded-xl bg-black text-white text-xs font-semibold hover:bg-slate-800 transition-all shadow-sm">
+          + Log Session
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Body Content -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Mobile Bottom Tab Bar -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#c6c6cd]/30 py-2">
+    <div class="grid grid-cols-5 text-center text-xs">
+      <a href="/" class="py-1 {% if page == 'regimen' %}font-bold text-[#006398]{% else %}text-slate-500{% endif %}">Regimen</a>
+      <a href="/active" class="py-1 {% if page == 'active' %}font-bold text-[#006398]{% else %}text-slate-500{% endif %}">Active</a>
+      <a href="/protocols" class="py-1 {% if page == 'protocols' %}font-bold text-[#006398]{% else %}text-slate-500{% endif %}">Protocols</a>
+      <a href="/biometrics" class="py-1 {% if page == 'biometrics' %}font-bold text-[#006398]{% else %}text-slate-500{% endif %}">Biometrics</a>
+      <a href="/codex" class="py-1 {% if page == 'codex' %}font-bold text-[#006398]{% else %}text-slate-500{% endif %}">Codex</a>
+    </div>
+  </nav>
+
+  <!-- Quick Log Modal (Simple HTML Form) -->
+  <div id="log-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 hidden">
+    <div class="bg-white w-full max-w-md rounded-2xl p-6 border border-slate-200 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold">Log Workout Session</h3>
+        <button onclick="document.getElementById('log-modal').classList.add('hidden')" class="text-slate-400 hover:text-black">✕</button>
+      </div>
+      <form action="/log-session" method="POST" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold mb-1 text-slate-600">Session Name</label>
+          <input type="text" name="title" required placeholder="e.g. 5x5 Barbell Back Squat" class="w-full px-3 py-2 border rounded-xl text-sm">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold mb-1 text-slate-600">Category</label>
+            <select name="category" class="w-full px-3 py-2 border rounded-xl">
+              <option value="Strength">Strength</option>
+              <option value="Interval">Interval</option>
+              <option value="Aerobic">Aerobic</option>
+              <option value="Mobility">Mobility</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1 text-slate-600">Duration (min)</label>
+            <input type="number" name="duration" value="50" class="w-full px-3 py-2 border rounded-xl">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold mb-1 text-slate-600">Calories (kcal)</label>
+            <input type="number" name="calories" value="450" class="w-full px-3 py-2 border rounded-xl">
+          </div>
+          <div>
+            <label class="block font-semibold mb-1 text-slate-600">RPE (1-10)</label>
+            <input type="number" step="0.5" name="rpe" value="8.0" class="w-full px-3 py-2 border rounded-xl font-mono">
+          </div>
+        </div>
+        <div class="pt-2 flex gap-2">
+          <button type="button" onclick="document.getElementById('log-modal').classList.add('hidden')" class="w-1/2 py-2.5 border rounded-xl font-semibold text-slate-600">Cancel</button>
+          <button type="submit" class="w-1/2 py-2.5 bg-black text-white rounded-xl font-bold">Save Workout</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

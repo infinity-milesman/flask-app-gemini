@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% block title %}Regimen & Database — Kinetic Clarity{% endblock %}
+
+{% block content %}
+<div class="space-y-8 pb-12">
+
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200 pb-5">
+    <div>
+      <span class="text-xs font-semibold uppercase tracking-wider text-[#006398] block mb-1">
+        SQLite3 Database Connected · Microcycle 3
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-[#0b1c30]">
+        Athletic Regimen & Database CRUD
+      </h1>
+    </div>
+    <div class="flex items-center gap-3">
+      <button onclick="document.getElementById('log-modal').classList.remove('hidden')" class="px-4 py-2 bg-black text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition-colors shadow-sm">
+        + Create Workout
+      </button>
+    </div>
+  </div>
+
+  <!-- Horizontal Day Carousel -->
+  <div class="flex items-center gap-3 overflow-x-auto pb-2">
+    {% for day in days %}
+    <div class="min-w-[76px] p-3 rounded-2xl border flex flex-col items-center justify-between {% if day.active %}bg-black text-white border-transparent shadow-md{% else %}bg-white text-slate-900 border-slate-200{% endif %}">
+      <span class="text-[11px] font-semibold uppercase {% if day.active %}text-slate-400{% else %}text-slate-500{% endif %}">{{ day.abbr }}</span>
+      <span class="text-2xl font-bold font-mono my-1">{{ day.day }}</span>
+      <span class="text-[9px] font-bold px-1.5 py-0.5 rounded {% if day.active %}bg-white/20 text-white{% else %}bg-slate-100 text-slate-600{% endif %}">
+        {{ day.status }}
+      </span>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Primary Kinetic Anchor: Dial & Key Stats from SQLite -->
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+    <!-- Readiness Card (5 Cols) -->
+    <div class="md:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 flex flex-col justify-between">
+      <div class="flex items-center justify-between text-xs">
+        <span class="font-bold text-slate-500 uppercase">Kinetic Readiness</span>
+        <span class="font-bold text-[#006398] uppercase">Optimal Peak</span>
+      </div>
+
+      <div class="my-6 flex items-center justify-around">
+        <div class="text-center">
+          <span class="text-xs text-slate-400 font-semibold block">DAILY STRAIN</span>
+          <span class="text-4xl font-extrabold font-mono text-slate-900">{{ profile.strain }}</span>
+          <span class="text-xs text-slate-400 font-mono block">/ {{ profile.strain_target }} Target</span>
+        </div>
+        <div class="h-14 w-[1px] bg-slate-200"></div>
+        <div class="text-center">
+          <span class="text-xs text-slate-400 font-semibold block">READINESS</span>
+          <span class="text-4xl font-extrabold font-mono text-[#009668]">{{ profile.readiness }}%</span>
+          <span class="text-xs text-slate-400 block">High Output Ready</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 pt-3 border-t border-slate-100 text-center text-xs">
+        <div class="p-2 bg-slate-50 rounded-xl">
+          <span class="text-slate-400 block text-[10px]">HRV</span>
+          <span class="font-bold font-mono">{{ profile.hrv }} ms</span>
+        </div>
+        <div class="p-2 bg-slate-50 rounded-xl">
+          <span class="text-slate-400 block text-[10px]">Resting HR</span>
+          <span class="font-bold font-mono">{{ profile.resting_hr }} bpm</span>
+        </div>
+        <div class="p-2 bg-slate-50 rounded-xl">
+          <span class="text-slate-400 block text-[10px]">Sleep</span>
+          <span class="font-bold font-mono">{{ profile.sleep_hours }} h</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Session Hero (7 Cols) -->
+    <div class="md:col-span-7 bg-white rounded-2xl border border-slate-200 p-6 flex flex-col justify-between">
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-[#006398] uppercase tracking-wider">Scheduled Today · 17:30</span>
+          <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700">In Progress</span>
+        </div>
+        <h2 class="text-2xl font-bold text-slate-900">Phase II · Hypertrophy & Posterior Chain</h2>
+        <p class="text-xs text-slate-500 mt-1">High-bar squat linear wave, dumbbell romanian deadlifts, and chest-supported rows.</p>
+      </div>
+
+      <div class="pt-6 border-t border-slate-100 flex items-center justify-between">
+        <div class="text-xs text-slate-600 font-mono">
+          <span>Total Logged Volume: {{ "{:,}".format(total_volume) }} kg</span> · 
+          <span>{{ "{:,}".format(total_calories) }} kcal</span>
+        </div>
+        <a href="/active" class="px-5 py-2.5 rounded-xl bg-black text-white text-xs font-bold hover:bg-slate-800 transition-all">
+          Launch Live Session →
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prescribed Sessions List with Full CRUD Operations -->
+  <div class="space-y-4">
+    <div class="flex items-center justify-between">
+      <h2 class="text-xl font-bold text-slate-900 tracking-tight">Database Workouts ({{ workouts|length }})</h2>
+      <button onclick="document.getElementById('log-modal').classList.remove('hidden')" class="text-xs font-semibold text-[#006398] hover:underline">
+        + Add New Workout
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {% for w in workouts %}
+      <div class="p-5 rounded-2xl bg-white border border-slate-200 flex flex-col justify-between space-y-4 shadow-sm hover:border-slate-400 transition-colors">
+        <div>
+          <div class="flex items-center justify-between text-xs text-slate-500 mb-2">
+            <span>{{ w.scheduled_time }} · {{ w.category }}</span>
+            <span class="font-bold px-2 py-0.5 rounded text-[10px] {% if w.status == 'Completed' %}bg-emerald-50 text-[#009668]{% elif w.status == 'In Progress' %}bg-blue-50 text-[#006398]{% else %}bg-slate-100 text-slate-600{% endif %}">
+              {{ w.status }}
+            </span>
+          </div>
+          <h3 class="text-base font-bold text-slate-900 leading-snug">{{ w.title }}</h3>
+          {% if w.notes %}
+          <p class="text-xs text-slate-500 mt-1.5 line-clamp-2">{{ w.notes }}</p>
+          {% endif %}
+        </div>
+
+        <div class="space-y-3 pt-3 border-t border-slate-100 text-xs">
+          <div class="flex items-center justify-between text-slate-600 font-mono text-[11px]">
+            <span>{{ w.duration_min }}m</span>
+            <span>{{ w.calories }} kcal</span>
+            {% if w.volume_kg > 0 %}
+            <span>{{ "{:,}".format(w.volume_kg) }} kg</span>
+            {% endif %}
+            <span>RPE {{ w.rpe }}</span>
+          </div>
+
+          <!-- CRUD Control Actions: Update, Toggle, Delete -->
+          <div class="flex items-center justify-between pt-1">
+            <form action="/workouts/{{ w.id }}/toggle-status" method="POST" class="inline">
+              <button type="submit" class="text-xs font-semibold text-[#006398] hover:underline">
+                {% if w.status == 'Completed' %}Mark Incomplete{% else %}✓ Mark Complete{% endif %}
+              </button>
+            </form>
+
+            <div class="flex items-center gap-2">
+              <a href="/workouts/{{ w.id }}/edit" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg font-semibold text-[11px]">
+                Edit
+              </a>
+              <form action="/workouts/{{ w.id }}/delete" method="POST" onsubmit="return confirm('Delete this workout?');" class="inline">
+                <button type="submit" class="px-2 py-1 text-red-600 hover:bg-red-50 rounded-lg text-[11px] font-semibold">
+                  Delete
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Athletic Habit Checklist with SQLite CRUD -->
+  <div class="bg-white p-6 rounded-2xl border border-slate-200 space-y-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-xl font-bold text-slate-900 tracking-tight">Daily Athletic Disciplines</h2>
+        <p class="text-xs text-slate-500">Stored in SQLite3 `habits` table.</p>
+      </div>
+    </div>
+
+    <!-- Habit Cards with Toggle and Delete -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+      {% for h in habits %}
+      <div class="p-3.5 rounded-xl border flex items-center justify-between {% if h.completed %}bg-emerald-50/50 border-emerald-200{% else %}bg-slate-50 border-slate-200{% endif %}">
+        <a href="/toggle-habit/{{ h.id }}" class="flex-1 flex items-center justify-between mr-2">
+          <div>
+            <span class="text-xs font-semibold text-slate-800 block">{{ h.title }}</span>
+            <span class="text-[10px] text-slate-400 font-mono">{{ h.target }}</span>
+          </div>
+          <span class="w-6 h-6 rounded flex items-center justify-center font-bold text-xs {% if h.completed %}bg-[#009668] text-white{% else %}border border-slate-300 text-transparent{% endif %}">✓</span>
+        </a>
+        <form action="/habits/{{ h.id }}/delete" method="POST" onsubmit="return confirm('Delete this habit?');">
+          <button type="submit" class="text-slate-400 hover:text-red-600 text-xs px-1">✕</button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Add Habit Quick Form (Create) -->
+    <form action="/habits/create" method="POST" class="pt-3 border-t border-slate-100 flex items-center gap-2 text-xs">
+      <input type="text" name="title" required placeholder="New discipline (e.g. Creatine 5g, 15m Mobility)" class="flex-1 px-3 py-2 border rounded-xl text-xs">
+      <input type="text" name="target" placeholder="Target (e.g. 5g daily)" class="w-32 px-3 py-2 border rounded-xl text-xs">
+      <button type="submit" class="px-4 py-2 bg-black text-white font-bold rounded-xl text-xs hover:bg-slate-800">
+        + Add Discipline
+      </button>
+    </form>
+  </div>
+
+</div>
+{% endblock %}

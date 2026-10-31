@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Movement Codex & Exercises — Kinetic Clarity{% endblock %}
+
+{% block content %}
+<div class="space-y-6 pb-12">
+  <div class="border-b border-slate-200 pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+    <div>
+      <span class="text-xs font-bold text-[#006398] uppercase tracking-wider block">Biomechanical Database · SQLite3</span>
+      <h1 class="text-3xl font-bold text-slate-900">Movement Codex ({{ exercises|length }})</h1>
+    </div>
+    <button onclick="document.getElementById('add-exercise-modal').classList.remove('hidden')" class="px-4 py-2 bg-black text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition-colors shadow-sm">
+      + Add Custom Movement
+    </button>
+  </div>
+
+  <!-- Exercise Cards with Delete and Detail -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    {% for ex in exercises %}
+    <div class="p-5 rounded-2xl bg-white border border-slate-200 flex flex-col justify-between space-y-3 shadow-sm hover:border-slate-400 transition-colors">
+      <div>
+        <div class="flex items-center justify-between text-xs text-slate-500 uppercase tracking-wider mb-1">
+          <span>{{ ex.pattern }} · {{ ex.equipment }}</span>
+          {% if ex.pr_1rm %}
+          <span class="font-mono font-bold text-[#009668]">{{ ex.pr_1rm }}</span>
+          {% endif %}
+        </div>
+        <h3 class="text-base font-bold text-slate-900 leading-snug">{{ ex.name }}</h3>
+        <p class="text-xs text-slate-500 mt-2 leading-relaxed">{{ ex.coaching_cue }}</p>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+        <span>Target: <strong class="text-slate-800">{{ ex.primary_muscle }}</strong></span>
+        <form action="/exercises/{{ ex.id }}/delete" method="POST" onsubmit="return confirm('Delete movement from Codex?');" class="inline">
+          <button type="submit" class="text-slate-400 hover:text-red-600 text-xs font-semibold px-2 py-1 rounded">
+            Delete
+          </button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Add Exercise Modal -->
+  <div id="add-exercise-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 hidden">
+    <div class="bg-white w-full max-w-md rounded-2xl p-6 border border-slate-200 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold">Add Movement to Codex</h3>
+        <button onclick="document.getElementById('add-exercise-modal').classList.add('hidden')" class="text-slate-400 hover:text-black">✕</button>
+      </div>
+
+      <form action="/exercises/create" method="POST" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold mb-1 text-slate-700">Movement Name</label>
+          <input type="text" name="name" required placeholder="e.g. Deficit Trap Bar Deadlift" class="w-full px-3 py-2 border rounded-xl text-sm">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold mb-1 text-slate-700">Movement Pattern</label>
+            <select name="pattern" class="w-full px-3 py-2 border rounded-xl">
+              <option value="Squat">Squat</option>
+              <option value="Hinge">Hinge</option>
+              <option value="Push">Push</option>
+              <option value="Pull">Pull</option>
+              <option value="Conditioning">Conditioning</option>
+              <option value="Prehab">Prehab</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1 text-slate-700">Equipment</label>
+            <select name="equipment" class="w-full px-3 py-2 border rounded-xl">
+              <option value="Barbell">Barbell</option>
+              <option value="Dumbbell">Dumbbell</option>
+              <option value="Bodyweight">Bodyweight</option>
+              <option value="Ergometer">Ergometer</option>
+              <option value="Cable">Cable</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1 text-slate-700">Primary Target Muscle</label>
+          <input type="text" name="primary_muscle" required placeholder="e.g. Quadriceps & Glutes" class="w-full px-3 py-2 border rounded-xl">
+        </div>
+
+        <div>
+          <label class="block font-semibold mb-1 text-slate-700">Coaching Technique Cue</label>
+          <textarea name="coaching_cue" rows="2" placeholder="Key technical focus..." class="w-full px-3 py-2 border rounded-xl"></textarea>
+        </div>
+
+        <div class="pt-2 flex gap-2">
+          <button type="button" onclick="document.getElementById('add-exercise-modal').classList.add('hidden')" class="w-1/2 py-2.5 border rounded-xl font-semibold text-slate-600">Cancel</button>
+          <button type="submit" class="w-1/2 py-2.5 bg-black text-white rounded-xl font-bold">Save Movement</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
